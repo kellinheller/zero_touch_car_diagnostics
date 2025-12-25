@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../qFlipper/backend/__pycache__"
+		},
+		{
+			"path": "../../qFlipper"
+		}
+	],
+	"settings": {
+		"codellm.openai.useLocalEmbedding": true,
+		"codellm.openai.model": "gpt-4",
+		"codellm.provider": "ollama",
+		"codellm.openai.temperature": 0.2
+	}
+}
