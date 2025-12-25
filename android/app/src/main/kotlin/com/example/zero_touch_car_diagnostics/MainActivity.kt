@@ -10,7 +10,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         
-        // Set up native method channels for qFlipper backend
+        // Set up native method channels for serial device backend
         FlipperBackendChannel.setupChannel(flutterEngine, this)
         // Set up OBD native channel for ELM327 Bluetooth adapters
         ObdPlugin.setupChannel(flutterEngine, this)

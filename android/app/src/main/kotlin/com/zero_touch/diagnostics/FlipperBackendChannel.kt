@@ -5,7 +5,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 /**
- * Bridges Flutter method calls to qFlipper C++ backend.
+ * Bridges Flutter method calls to serial device C++ backend.
  * Handles device discovery, connection, firmware installation, and diagnostics.
  */
 class FlipperBackendChannel {
@@ -24,20 +24,20 @@ class FlipperBackendChannel {
                     "connectDevice" -> {
                         val deviceId = call.argument<String>("deviceId")
                         if (deviceId != null) {
-                            // TODO: Call native C++ FlipperZero::connect(deviceId)
+                            // TODO: Call native C++ SerialDevice::connect(deviceId)
                             result.success(true)
                         } else {
                             result.error("INVALID_ARGS", "deviceId is required", null)
                         }
                     }
                     "disconnectDevice" -> {
-                        // TODO: Call native C++ FlipperZero::disconnect()
+                        // TODO: Call native C++ SerialDevice::disconnect()
                         result.success(null)
                     }
                     "getDeviceInfo" -> {
-                        // TODO: Call native C++ FlipperZero::getDeviceInfo()
+                        // TODO: Call native C++ SerialDevice::getDeviceInfo()
                         val info = mapOf<String, Any>(
-                            "name" to "Flipper Zero",
+                            "name" to "Serial Device",
                             "version" to "0.0.0",
                             "hardware" to "unknown"
                         )
@@ -47,7 +47,7 @@ class FlipperBackendChannel {
                         val filePath = call.argument<String>("path")
                         if (filePath != null) {
                             try {
-                                // TODO: Call native C++ FlipperZero::installFirmware(filePath)
+                                // TODO: Call native C++ SerialDevice::installFirmware(filePath)
                                 result.success(null)
                             } catch (e: Exception) {
                                 result.error("INSTALL_FAILED", e.message, null)
@@ -57,7 +57,7 @@ class FlipperBackendChannel {
                         }
                     }
                     "factoryReset" -> {
-                        // TODO: Call native C++ FlipperZero::factoryReset()
+                        // TODO: Call native C++ SerialDevice::factoryReset()
                         result.success(null)
                     }
                     else -> {

@@ -1,8 +1,8 @@
-# Backend Integration Plan for qFlipper → Flutter Zero-Touch Car Diagnostics
+# Backend Integration Plan for Serial Device Car Diagnostics
 
 ## Overview
 
-This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/backend`) into the Flutter mobile app (Android/iOS) to enable device communication, firmware updates, and diagnostics.
+This document outlines how to integrate the serial device C++ backend into the Flutter mobile app (Android/iOS) to enable device communication, firmware updates, and diagnostics.
 
 ---
 
@@ -10,21 +10,20 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
 
 ### Flutter App
 
-- **Location:** `/home/kal/Desktop/zero_touch_car_diagnostics/`
-- **Status:** Merged with qFlipper assets (fonts, icons, SVGs)
+- **Location:** `/home/kal/zero_touch_car_diagnostics/`
+- **Status:** Core diagnostics framework in place
 - **Main entry:** `lib/main.dart`
-- **Platforms ready:** Android, iOS (macOS build config in place)
+- **Platforms ready:** Android, iOS
 
-### qFlipper Backend
+### Serial Device Backend
 
-- **Location:** `qFlipper/backend/`
-- **Language:** C++ (Qt-based, Unix/Linux/Windows/macOS)
+- **Location:** `backend/`
+- **Language:** C++ (Unix/Linux cross-compatible)
 - **Key components:**
-  - **Device RPC:** `flipperzero/rpc/*` — Remote Procedure Call operations for Flipper device
-  - **Recovery & Updates:** `flipperzero/recovery/*` — Firmware download, installation, boot mode
-  - **Serial/USB:** `serialfinder.*`, serial helpers — Device discovery and communication
-  - **Utilities:** File manager, virtual display, screen streamer, compression, updates
-  - **Helpers:** Device info, firmware helper, radio manifest, settings backup/restore
+  - **Device Serial:** `serialfinder.*` — Device discovery and communication
+  - **Operations:** `abstractoperation.*`, `simpleserialoperation.*` — Base and serial operations
+  - **Utilities:** Compression (gzip, tar), file management, version info
+  - **Helpers:** Device info, firmware helpers, remote file fetcher
 
 ---
 
@@ -32,7 +31,7 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
 
 ### Option 1: Native C++ Library (Recommended for Full Functionality)
 
-**Approach:** Compile qFlipper backend as a native Android/iOS library and expose via Flutter Platform Channels.
+**Approach:** Compile serial device backend as a native Android/iOS library and expose via Flutter Platform Channels.
 
 #### Android Setup
 
@@ -80,25 +79,25 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
    cmake_minimum_required(VERSION 3.18)
    project(zero_touch_car_diagnostics)
 
-   # Add qFlipper backend as a subdirectory
-   add_subdirectory(../../qFlipper/backend flipper_backend)
+   # Add serial device backend as a subdirectory
+   add_subdirectory(../../backend serial_device_backend)
 
    # Create a wrapper library
-   add_library(flipper_bridge SHARED flipper_bridge.cpp)
-   target_link_libraries(flipper_bridge PRIVATE flipper_backend)
+   add_library(serial_bridge SHARED serial_bridge.cpp)
+   target_link_libraries(serial_bridge PRIVATE serial_device_backend)
    ```
 
-3. **Create JNI bridge** at `android/app/src/main/cpp/flipper_bridge.cpp`:
+3. **Create JNI bridge** at `android/app/src/main/cpp/serial_bridge.cpp`:
 
    ```cpp
    #include <jni.h>
    #include <string>
-   #include "../../qFlipper/backend/serialfinder.h"
-   #include "../../qFlipper/backend/flipperzero/flipperzero.h"
+   #include "../../backend/serialfinder.h"
+   #include "../../backend/deviceregistry.h"
 
    extern "C" {
        JNIEXPORT jobjectArray JNICALL
-       Java_com_zero_touch_diagnostics_FlipperBackend_getDevices(JNIEnv *env, jobject) {
+       Java_com_zero_touch_diagnostics_SerialDeviceBackend_getDevices(JNIEnv *env, jobject) {
            // Call C++ SerialFinder to enumerate devices
            // Convert results to Java String array
            return nullptr; // Placeholder
@@ -153,8 +152,8 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
    #ifndef FlipperBackend_Bridging_Header_h
    #define FlipperBackend_Bridging_Header_h
 
-   #include "../../../qFlipper/backend/serialfinder.h"
-   #include "../../../qFlipper/backend/flipperzero/flipperzero.h"
+   #include "../../../backend/serialfinder.h"
+   #include "../../../backend/deviceregistry.h"
 
    #endif
    ```
@@ -165,14 +164,14 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
 
 ### Option 2: Lighter Integration (Serial Passthrough)
 
-**Approach:** Keep qFlipper backend in a background service; communicate over USB/Bluetooth from Flutter.
+**Approach:** Keep serial device backend in a background service; communicate over USB/Bluetooth from Flutter.
 
 - **Pros:** Simpler Flutter integration, less compilation hassle
 - **Cons:** Requires a companion daemon or separate binary on device
 
 **Steps:**
 
-1. Compile qFlipper backend as a standalone binary for Android (`arm64-v8a`) and iOS (`armv7`, `arm64`)
+1. Compile serial device backend as a standalone binary for Android (`arm64-v8a`) and iOS (`armv7`, `arm64`)
 2. Bundle binary in app assets
 3. Extract and run at startup
 4. Communicate via named sockets or HTTP server on localhost
@@ -184,7 +183,7 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
 **Approach:** Port critical device communication logic to Dart using `dart:ffi` or a simpler Kotlin/Swift layer.
 
 - **Pros:** Pure Dart, no C++ compilation
-- **Cons:** Loses qFlipper's advanced features (screen streaming, protobuf RPC)
+- **Cons:** Requires background service management; lower-level integration
 
 ---
 
@@ -193,21 +192,20 @@ This document outlines how to integrate the qFlipper C++/Qt backend (`qFlipper/b
 ### High Priority (Device Communication)
 
 - `serialfinder.h/cpp` — USB/Serial device enumeration (essential)
-- `flipperzero/rpc/*` — Protobuf RPC for device commands
-- `flipperzero/flipperzero.h/cpp` — Main device interface
-- `flipperzero/protobufsession.*` — Session management
+- `deviceregistry.h/cpp` — Device registry management
+- `abstractoperation.h/cpp` — Base operation interface
 
 ### Medium Priority (Utilities)
 
-- `flipperzero/recovery/*` — Firmware installation
-- `flipperzero/toplevel/*` — High-level operations (firmware update, factory reset, backup/restore)
-- `flipperzero/helper/*` — Device info, firmware helpers
+- `simpleserialoperation.h/cpp` — Serial operations
+- `logger.h/cpp` — Logging utilities
+- `preferences.h/cpp` — Configuration management
 
 ### Low Priority (Optional)
 
-- Screen streaming (`flipperzero/screenstreamer.*`)
-- Virtual display (`flipperzero/virtualdisplay.*`)
 - Compression utilities (`tarzipcompressor.*`, `gzipcompressor.*`)
+- File management (`filenode.*`)
+- Version info (`versioninfo.*`)
 
 ---
 
@@ -240,7 +238,7 @@ yes | sdkmanager --licenses
 
 ### 4. Plan C++ Recompilation
 
-- Analyze qFlipper CMake/Qt dependencies
+- Analyze serial device CMake/dependencies
 - Identify which libs can compile without Qt (e.g., protobuf RPC, serial finder)
 - Set up NDK cross-compilation environment
 
@@ -342,7 +340,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 - [ ] `sdkmanager --licenses` executed
 - [ ] Kotlin/Swift platform channels stubbed
 - [ ] Dart service layer created (`FlipperService`)
-- [ ] qFlipper CMake config analyzed for Android NDK cross-compilation
+- [ ] Serial device CMake config analyzed for Android NDK cross-compilation
 - [ ] JNI bridge skeleton in place
 - [ ] iOS bridging header configured
 - [ ] Test build: `flutter build apk --debug` (with licenses accepted)
@@ -356,7 +354,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 - [Flutter Platform Channels](https://flutter.dev/docs/development/platform-integration/platform-channels)
 - [Android NDK Build Setup](https://developer.android.com/ndk/guides/cmake)
 - [iOS Native Integration](https://flutter.dev/docs/development/platform-integration/ios/c-interop)
-- [qFlipper GitHub](https://github.com/flipperdevices/flipperzero-firmware)
+- [Serial Device GitHub](https://github.com/flipperdevices/flipperzero-firmware)
 
 ---
 

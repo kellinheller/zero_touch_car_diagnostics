@@ -8,10 +8,9 @@
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-// TODO: Include qFlipper headers once CMake is properly set up
-// #include "serialfinder.h"
-// #include "flipperzero/flipperzero.h"
-// #include "flipperzero/protobufsession.h"
+// TODO: Include serial device headers once CMake is properly set up
+// #include "serialdevice/serialdevice.h"
+// #include "serialdevice/session.h"
 
 extern "C" {
 
@@ -55,8 +54,8 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_connectDevice(
     const char* deviceId = env->GetStringUTFChars(jDeviceId, nullptr);
     LOGI("connectDevice() called with deviceId: %s", deviceId);
     
-    // TODO: Call FlipperZero::connect(deviceId)
-    // bool connected = g_flipper->connect(std::string(deviceId));
+    // TODO: Call SerialDevice::connect(deviceId)
+    // bool connected = g_device->connect(std::string(deviceId));
     
     env->ReleaseStringUTFChars(jDeviceId, deviceId);
     
@@ -75,8 +74,8 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_disconnectDevice(
 {
     LOGI("disconnectDevice() called");
     
-    // TODO: Call FlipperZero::disconnect()
-    // g_flipper->disconnect();
+    // TODO: Call SerialDevice::disconnect()
+    // g_device->disconnect();
     
     LOGI("disconnectDevice() completed");
 }
@@ -94,8 +93,8 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_getDeviceInfo(
 {
     LOGI("getDeviceInfo() called");
     
-    // TODO: Call FlipperZero::getDeviceInfo()
-    // auto info = g_flipper->getDeviceInfo();
+    // TODO: Call SerialDevice::getDeviceInfo()
+    // auto info = g_device->getDeviceInfo();
     
     // Create a HashMap to return device info
     jclass hashMapClass = env->FindClass("java/util/HashMap");
@@ -108,7 +107,7 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_getDeviceInfo(
     // Add stub data
     env->CallObjectMethod(hashMap, put,
         env->NewStringUTF("name"),
-        env->NewStringUTF("Flipper Zero"));
+        env->NewStringUTF("Serial Device"));
     env->CallObjectMethod(hashMap, put,
         env->NewStringUTF("version"),
         env->NewStringUTF("0.0.0"));
@@ -136,9 +135,9 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_installFirmware(
     const char* filePath = env->GetStringUTFChars(jFilePath, nullptr);
     LOGI("installFirmware() called with path: %s", filePath);
     
-    // TODO: Call FlipperZero::installFirmware(filePath)
+    // TODO: Call SerialDevice::installFirmware(filePath)
     // try {
-    //     g_flipper->installFirmware(std::string(filePath));
+    //     g_device->installFirmware(std::string(filePath));
     // } catch (const std::exception& e) {
     //     LOGE("installFirmware() failed: %s", e.what());
     //     env->ThrowNew(env->FindClass("java/lang/RuntimeException"), e.what());
@@ -159,8 +158,8 @@ Java_com_zero_touch_diagnostics_FlipperBackendChannel_factoryReset(
 {
     LOGI("factoryReset() called");
     
-    // TODO: Call FlipperZero::factoryReset()
-    // g_flipper->factoryReset();
+    // TODO: Call SerialDevice::factoryReset()
+    // g_device->factoryReset();
     
     LOGI("factoryReset() completed");
 }

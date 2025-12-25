@@ -38,7 +38,7 @@ android {
         }
     }
 
-    // Enable CMake for native C++ code (qFlipper backend)
+    // Enable CMake for native C++ code (backend bridge)
     externalNativeBuild {
         cmake {
             path = file("CMakeLists.txt")
