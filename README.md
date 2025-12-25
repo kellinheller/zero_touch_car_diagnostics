@@ -1,6 +1,6 @@
 # Zero Touch Car Diagnostics
 
-Multiplatform Flutter app that connects to ELM327 (Bluetooth Classic or USB serial), samples OBD-II telemetry, and sends structured data to Gemini for automated diagnosis.
+Multiplatform Flutter app that connects to ELM327 (Bluetooth Classic or USB serial), samples OBD-II telemetry, and sends structured data to Gemini for automated diagnosis. this app is a multi-platform app that uses the sensor data from a cars OBD2 via a ELM327 Bluetooth module or USB serial cable connected to a mobile device (android/IOS) to automate the diagnosis process of a vehicle by sending the data to Gemini 2.5 and prompting it to diagnose the problem and return a on-screen answer.  The output diagnosis must be within 95-99% accuracy. this app is a ongoing work-in-progress.
 
 ## Features
 
