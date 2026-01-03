@@ -11,12 +11,12 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 
     defaultConfig {
@@ -39,12 +39,13 @@ android {
     }
 
     // Enable CMake for native C++ code (backend bridge)
-    externalNativeBuild {
-        cmake {
-            path = file("CMakeLists.txt")
-            version = "3.18.1"
-        }
-    }
+    // Temporarily disabled for release build
+    // externalNativeBuild {
+    //     cmake {
+    //         path = file("CMakeLists.txt")
+    //         version = "3.18.1"
+    //     }
+    // }
 }
 
 flutter {

@@ -66,23 +66,26 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              const Text('Transport:'),
-              const SizedBox(width: 12),
-              DropdownButton<String>(
-                value: _transport,
-                items: const [
-                  DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
-                  DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
-                  DropdownMenuItem(value: 'USB', child: Text('USB')),
-                ],
-                onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
-              ),
-              const SizedBox(width: 12),
-              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
-              const SizedBox(width: 12),
-              ElevatedButton(onPressed: _diagnose, child: const Text('Diagnose')),
-            ]),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(children: [
+                const Text('Transport:'),
+                const SizedBox(width: 12),
+                DropdownButton<String>(
+                  value: _transport,
+                  items: const [
+                    DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
+                    DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
+                    DropdownMenuItem(value: 'USB', child: Text('USB')),
+                  ],
+                  onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(onPressed: _connect, child: const Text('Connect')),
+                const SizedBox(width: 12),
+                ElevatedButton(onPressed: _diagnose, child: const Text('Diagnose')),
+              ]),
+            ),
             const SizedBox(height: 12),
             Text('Status: $_status'),
             const SizedBox(height: 12),
