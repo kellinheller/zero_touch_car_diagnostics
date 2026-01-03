@@ -1,3 +1,4 @@
 {
-    "chat.promptFilesRecommendations": {}
+    "chat.promptFilesRecommendations": {},
+    "idf.pythonInstallPath": "/usr/bin/python3"
 }
