@@ -6,7 +6,7 @@ import '../services/elm327_protocol.dart';
 import '../services/gemini_client.dart';
 import '../services/obd_connection.dart';
 import '../services/simulation_obd_connection.dart';
-// import '../services/usb_obd_connection.dart';
+import '../services/usb_obd_connection.dart';
 
 class DiagnosticsPage extends StatefulWidget {
   const DiagnosticsPage({super.key});
@@ -33,10 +33,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
         return;
         // _conn = BluetoothObdConnection();
       } else if (_transport == 'USB') {
-        // USB temporarily disabled due to package compatibility
-        setState(() => _status = 'USB support disabled');
-        return;
-        // _conn = UsbObdConnection();
+        _conn = UsbObdConnection();
       } else {
         _conn = SimulationObdConnection();
       }
