@@ -125,14 +125,14 @@ flutter build apk --release    # Android
 flutter build ios --release    # iOS
 ```
 
-2. **Upload to GitHub Release**
+1. **Upload to GitHub Release**
 
 ```bash
 gh release upload v1.0.0 build/app/outputs/flutter-apk/app-release.apk
 gh release upload v1.0.0 build/ios_build/ipa/Runner.ipa
 ```
 
-3. **Submit to App Stores** (optional)
+1. **Submit to App Stores** (optional)
 
    - Google Play Store (requires business account)
    - Apple App Store (requires Apple Developer account)
@@ -149,7 +149,7 @@ gh release upload v1.0.0 build/ios_build/ipa/Runner.ipa
 ## 📊 Release Statistics
 
 | Item | Status |
-|------|--------|
+| --- | --- |
 | Source Code | ✅ Available |
 | Documentation | ✅ Complete |
 | Tests | ✅ Passing |
@@ -192,7 +192,7 @@ gh release upload v1.0.0 build/ios_build/ipa/Runner.ipa
 ## 📅 Release Information
 
 | Field | Value |
-|-------|-------|
+| --- | --- |
 | Release Version | 1.0.0 |
 | Release Date | January 3, 2025 |
 | Repository | zero_touch_car_diagnostics_vs2 |
@@ -229,4 +229,4 @@ After resolving the Java version (follow `BUILD_JAVA_SETUP.md`):
 
 **Status**: 🟢 **Release v1.0.0 Successfully Published**  
 **Next Action**: Follow `BUILD_JAVA_SETUP.md` to build binaries  
-**Repository**: https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2
+**Repository**: [Zero-Touch Car Diagnostics](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2)
