@@ -63,11 +63,35 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Zero-Touch Car Diagnostics')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(
+        title: const Text(
+          'Zero-Touch Car Diagnostics',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.cyan,
+        elevation: 8,
+        shadowColor: Colors.cyan.withOpacity(0.5),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.cyan.shade50,
+              Colors.blue.shade50,
+              Colors.teal.shade50,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -84,19 +108,81 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                   onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
                 ),
                 const SizedBox(width: 12),
-                ElevatedButton(onPressed: _connect, child: const Text('Connect')),
+                ElevatedButton(
+                  onPressed: _connect,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  ),
+                  child: const Text('Connect'),
+                ),
                 const SizedBox(width: 12),
-                ElevatedButton(onPressed: _diagnose, child: const Text('Diagnose')),
+                ElevatedButton(
+                  onPressed: _diagnose,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  ),
+                  child: const Text('Diagnose'),
+                ),
               ]),
             ),
-            const SizedBox(height: 12),
-            Text('Status: $_status'),
-            const SizedBox(height: 12),
-            Text('Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):'),
+            const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
-              child: Text(_diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet.'),
+              decoration: BoxDecoration(
+                color: Colors.cyan.withOpacity(0.15),
+                border: Border.all(color: Colors.cyan, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Status: $_status',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.lime.shade50,
+                border: Border.all(color: Colors.lime, width: 2),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.lime.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Text(
+                _diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet. Click "Diagnose" to start!',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.lime.shade900,
+                  height: 1.5,
+                ),
+              ),
             ),
           ],
         ),
