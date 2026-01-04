@@ -19,26 +19,31 @@
 ## ✨ Features Included in v1.0.0
 
 ✅ **Zero-Touch Vehicle Diagnostics**
+
 - Modern Material Design UI
 - Bright cyan header with gradient background
 - Color-coded interface (Green connect, Orange diagnose)
 
 ✅ **Multiple Connection Options**
+
 - Simulation mode (for development/testing)
 - USB connection support
 - Bluetooth support (temporarily disabled)
 
 ✅ **Real-time Diagnostics**
+
 - Status monitoring
 - Live diagnosis results
 - Confidence scoring
 
 ✅ **AI-Powered Analysis**
+
 - Google Generative AI integration
 - Smart vehicle problem analysis
 - Professional recommendations
 
 ✅ **Cross-Platform Ready**
+
 - iOS IPA ready to build
 - Web version available
 - Linux/Windows/macOS support
@@ -48,17 +53,20 @@
 ## 🧪 Quality Assurance
 
 ✅ **Testing**:
+
 - All widget tests passing
 - Flutter analysis: No issues
 - Code coverage: Complete
 
 ✅ **Build Environment**:
+
 - Java: OpenJDK 17.0.17 LTS
 - Gradle: 8.13
 - Android API: 21-35
 - Build Tools: 33+
 
 ✅ **Dependencies**:
+
 - Flutter: 3.x stable
 - Dart: Latest stable
 - All packages compatible
@@ -100,7 +108,7 @@ gh release upload v1.0.0 build/app/outputs/flutter-apk/app-release.apk
 
 ### Option 2: Web Browser
 
-1. Go to: https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/releases/tag/v1.0.0
+1. Go to: [GitHub v1.0.0 Release](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/releases/tag/v1.0.0)
 2. Click "Edit"
 3. Drag and drop the APK file into the assets section
 4. Click "Update release"
@@ -154,7 +162,7 @@ Before publishing:
 ## 📊 Build Statistics
 
 | Metric | Value |
-|--------|-------|
+| --- | --- |
 | Total Build Time | 5-10 minutes |
 | APK Size | 45-55 MB |
 | Compression | ~20% |
@@ -168,12 +176,18 @@ Before publishing:
 ## 🎯 Version Information
 
 **v1.0.0** (Current)
+
 - Initial stable release
 - Full feature set
 - Production ready
 - Multi-platform support
 
 **Previous**: None (Initial release)
+
+**Planned**:
+
+- v1.1.0: Bluetooth support re-enabled
+- v2.0.0: Backend API integration
 
 **Planned**:
 - v1.1.0: Bluetooth support re-enabled
@@ -183,11 +197,11 @@ Before publishing:
 
 ## 📞 Support & Resources
 
-**Repository**: https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2
+**Repository**: [Zero-Touch Car Diagnostics](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2)
 
-**Release**: https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/releases/tag/v1.0.0
+**Release**: [GitHub Release v1.0.0](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/releases/tag/v1.0.0)
 
-**Issues**: https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/issues
+**Issues**: [GitHub Issues](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/issues)
 
 **Documentation**: See README.md and RELEASE_NOTES.md
 
