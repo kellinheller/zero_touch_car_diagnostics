@@ -92,7 +92,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+            children: [
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(children: [
@@ -190,3 +190,4 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
     );
   }
 }
+
