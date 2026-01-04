@@ -5,6 +5,7 @@ This guide explains how to resolve the Java 25 compatibility issue and successfu
 ## The Problem
 
 The current build environment has **Java 25**, which the Kotlin compiler doesn't recognize. This causes the build to fail with:
+
 ```
 java.lang.IllegalArgumentException: 25.0.1
 ```
