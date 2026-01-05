@@ -19,9 +19,12 @@ class BluetoothObdConnection implements ObdConnection {
     // Discover bonded devices and try to find typical ELM327 names
     final devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     final elm = devices.firstWhere(
-      (d) => (d.name?.toLowerCase().contains('elm') ?? false) ||
-              (d.name?.toLowerCase().contains('obd') ?? false),
-      orElse: () => devices.isNotEmpty ? devices.first : (throw Exception('No paired Bluetooth devices found')),
+      (d) =>
+          (d.name?.toLowerCase().contains('elm') ?? false) ||
+          (d.name?.toLowerCase().contains('obd') ?? false),
+      orElse: () => devices.isNotEmpty
+          ? devices.first
+          : (throw Exception('No paired Bluetooth devices found')),
     );
     _conn = await BluetoothConnection.toAddress(elm.address);
     _conn!.input!.listen(_onData, onDone: () => _lineController.close());
