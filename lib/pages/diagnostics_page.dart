@@ -55,7 +55,9 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
     final result = await gemini.diagnose(telemetry);
     setState(() {
       _diagnosis = (result['diagnosis'] ?? '').toString();
-      _confidence = (result['confidence'] ?? 0.0) is num ? (result['confidence'] as num).toDouble() : 0.0;
+      _confidence = (result['confidence'] ?? 0.0) is num
+          ? (result['confidence'] as num).toDouble()
+          : 0.0;
       _status = 'Done';
     });
   }
@@ -102,11 +104,18 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                     DropdownButton<String>(
                       value: _transport,
                       items: const [
-                        DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
-                        DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
+                        DropdownMenuItem(
+                          value: 'Simulation',
+                          child: Text('Simulation (Dev)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Bluetooth',
+                          child: Text('Bluetooth'),
+                        ),
                         DropdownMenuItem(value: 'USB', child: Text('USB')),
                       ],
-                      onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
+                      onChanged: (v) =>
+                          setState(() => _transport = v ?? 'Simulation'),
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
@@ -114,7 +123,10 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                       ),
                       child: const Text('Connect'),
                     ),
@@ -124,7 +136,10 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                       ),
                       child: const Text('Diagnose'),
                     ),
@@ -178,7 +193,9 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                   ],
                 ),
                 child: Text(
-                  _diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet. Click "Diagnose" to start!',
+                  _diagnosis.isNotEmpty
+                      ? _diagnosis
+                      : 'No diagnosis yet. Click "Diagnose" to start!',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.lime.shade900,
@@ -193,4 +210,3 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
     );
   }
 }
-
