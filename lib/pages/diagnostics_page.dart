@@ -93,98 +93,101 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
-                const Text('Transport:'),
-                const SizedBox(width: 12),
-                DropdownButton<String>(
-                  value: _transport,
-                  items: const [
-                    DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
-                    DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
-                    DropdownMenuItem(value: 'USB', child: Text('USB')),
-                  ],
-                  onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: _connect,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  ),
-                  child: const Text('Connect'),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: _diagnose,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  ),
-                  child: const Text('Diagnose'),
-                ),
-              ]),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.cyan.withOpacity(0.15),
-                border: Border.all(color: Colors.cyan, width: 2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Status: $_status',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    const Text('Transport:'),
+                    const SizedBox(width: 12),
+                    DropdownButton<String>(
+                      value: _transport,
+                      items: const [
+                        DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
+                        DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
+                        DropdownMenuItem(value: 'USB', child: Text('USB')),
+                      ],
+                      onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.teal,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.lime.shade50,
-                border: Border.all(color: Colors.lime, width: 2),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.lime.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Text(
-                _diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet. Click "Diagnose" to start!',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.lime.shade900,
-                  height: 1.5,
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: _connect,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      child: const Text('Connect'),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: _diagnose,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      child: const Text('Diagnose'),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.cyan.withOpacity(0.15),
+                  border: Border.all(color: Colors.cyan, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Status: $_status',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.lime.shade50,
+                  border: Border.all(color: Colors.lime, width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.lime.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  _diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet. Click "Diagnose" to start!',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.lime.shade900,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
