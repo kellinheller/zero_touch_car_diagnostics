@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// import '../services/bluetooth_obd_connection.dart';
+import '../services/bluetooth_obd_connection.dart';
 import '../services/diagnostics_service.dart';
 import '../services/elm327_protocol.dart';
 import '../services/gemini_client.dart';
@@ -28,10 +28,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
     setState(() => _status = 'Connecting...');
     try {
       if (_transport == 'Bluetooth') {
-        // Bluetooth temporarily disabled due to package compatibility
-        setState(() => _status = 'Bluetooth support disabled');
-        return;
-        // _conn = BluetoothObdConnection();
+        _conn = BluetoothObdConnection();
       } else if (_transport == 'USB') {
         _conn = UsbObdConnection();
       } else {
