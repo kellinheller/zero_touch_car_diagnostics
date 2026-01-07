@@ -7,13 +7,7 @@ class OBD2Protocol {
   final OBDChipType chipType;
   final Duration responseTimeout;
 
-  late StreamSubscription _responseListener;
   final _responseQueue = <String>[];
-  final _responseLock = AsyncLock();
-
-  OBD2Protocol({
-    required this.chipType,
-    this.responseTimeout = const Duration(seconds: 2),
   });
 
   /// Standard OBD2 PIDs (Parameter IDs) supported across all chips

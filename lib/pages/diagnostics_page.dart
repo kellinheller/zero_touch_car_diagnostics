@@ -104,9 +104,9 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
             icon: const Icon(Icons.settings, color: Colors.white),
             tooltip: 'Settings & Requirements',
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsPage()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsPage()));
             },
           ),
         ],

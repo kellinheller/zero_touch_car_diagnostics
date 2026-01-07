@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'obd_chip.dart';
 import 'obd_connection.dart';
 
 /// STN1110 OBD2 adapter implementation
@@ -12,8 +11,6 @@ class STN1110ObdConnection implements ObdConnection {
   late StreamSubscription _listener;
   final _lineController = StreamController<String>.broadcast();
   final _buffer = StringBuffer();
-
-  OBDChipInfo? _chipInfo;
 
   STN1110ObdConnection({
     required Stream<String> inputStream,
