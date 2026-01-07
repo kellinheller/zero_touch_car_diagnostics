@@ -27,16 +27,39 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
   Future<void> _connect() async {
     setState(() => _status = 'Connecting...');
     try {
-      if (_transport == 'Bluetooth') {
+      // Handle different transport and chip combinations
+      if (_transport.startsWith('Bluetooth')) {
         _conn = BluetoothObdConnection();
-      } else if (_transport == 'USB') {
-        _conn = UsbObdConnection();
+        setState(
+          () => _status =
+              'Detected: ${_transport.split('(')[1].replaceFirst(')', '')}',
+        );
+      } else if (_transport.startsWith('USB')) {
+        if (_transport.contains('Generic')) {
+          _conn = UsbObdConnection();
+          setState(() => _status = 'Using Generic OBD2 Protocol');
+        } else {
+          _conn = UsbObdConnection();
+          setState(() => _status = 'Using ELM327 Protocol');
+        }
       } else {
         _conn = SimulationObdConnection();
+        setState(() => _status = 'Simulation Mode');
       }
+
       _elm = Elm327Protocol(_conn!);
       await _elm!.initialize();
-      setState(() => _status = 'Connected');
+
+      // Log chip detection
+      String chipDetected = 'Unknown';
+      if (_transport.contains('STN1110'))
+        chipDetected = 'STN1110 (Advanced OBD2)';
+      else if (_transport.contains('LTC1260'))
+        chipDetected = 'LTC1260 (Generic OBD2)';
+      else if (_transport.contains('ELM327'))
+        chipDetected = 'ELM327 (Standard OBD2)';
+
+      setState(() => _status = 'Connected: $chipDetected');
     } catch (e) {
       setState(() => _status = 'Error: $e');
     }
@@ -106,10 +129,25 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                           child: Text('Simulation (Dev)'),
                         ),
                         DropdownMenuItem(
-                          value: 'Bluetooth',
-                          child: Text('Bluetooth'),
+                          value: 'Bluetooth (ELM327)',
+                          child: Text('Bluetooth (ELM327)'),
                         ),
-                        DropdownMenuItem(value: 'USB', child: Text('USB')),
+                        DropdownMenuItem(
+                          value: 'Bluetooth (STN1110)',
+                          child: Text('Bluetooth (STN1110)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Bluetooth (LTC1260)',
+                          child: Text('Bluetooth (LTC1260)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'USB (ELM327)',
+                          child: Text('USB (ELM327)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'USB (Generic)',
+                          child: Text('USB (Generic OBD2)'),
+                        ),
                       ],
                       onChanged: (v) =>
                           setState(() => _transport = v ?? 'Simulation'),
