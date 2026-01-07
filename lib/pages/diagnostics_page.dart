@@ -8,6 +8,7 @@ import '../services/obd_connection.dart';
 import '../services/simulation_obd_connection.dart';
 import '../services/usb_obd_connection.dart';
 import '../widgets/status_indicator.dart';
+import 'settings_page.dart';
 
 class DiagnosticsPage extends StatefulWidget {
   const DiagnosticsPage({super.key});
@@ -98,6 +99,17 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
         backgroundColor: Colors.cyan,
         elevation: 8,
         shadowColor: Colors.cyan.withOpacity(0.5),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            tooltip: 'Settings & Requirements',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

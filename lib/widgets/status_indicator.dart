@@ -59,10 +59,7 @@ class StatusIndicator extends StatelessWidget {
               color: statusColor.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: Text(
-              _getStatusIcon(),
-              style: const TextStyle(fontSize: 24),
-            ),
+            child: Text(_getStatusIcon(), style: const TextStyle(fontSize: 24)),
           ),
           const SizedBox(width: 12),
           // Status info
@@ -89,7 +86,10 @@ class StatusIndicator extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(6),
@@ -160,10 +160,7 @@ class MiniStatusBar extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
           Text(
@@ -186,7 +183,9 @@ Color getStatusColor(String status) {
     return Colors.red;
   } else if (status.contains('Connected') || status.contains('Done')) {
     return Colors.green;
-  } else if (status.contains('Connecting') || status.contains('Sampling') || status.contains('Sending')) {
+  } else if (status.contains('Connecting') ||
+      status.contains('Sampling') ||
+      status.contains('Sending')) {
     return Colors.orange;
   } else {
     return Colors.blue;
