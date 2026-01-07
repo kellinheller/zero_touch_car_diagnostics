@@ -7,6 +7,7 @@ import '../services/gemini_client.dart';
 import '../services/obd_connection.dart';
 import '../services/simulation_obd_connection.dart';
 import '../services/usb_obd_connection.dart';
+import '../widgets/status_indicator.dart';
 
 class DiagnosticsPage extends StatefulWidget {
   const DiagnosticsPage({super.key});
@@ -115,6 +116,14 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Status Indicator
+              StatusIndicator(
+                status: _status,
+                transport: _transport,
+                isConnected: _elm != null,
+                statusColor: getStatusColor(_status),
+              ),
+              const SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
