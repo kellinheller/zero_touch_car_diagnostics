@@ -9,6 +9,7 @@
 ## Build Details
 
 ### APK Information
+
 - **Filename:** `zero_touch_car_diagnostics_v1.2.0.apk`
 - **Location:** `/home/kal/zero_touch_car_diagnostics/zero_touch_car_diagnostics_v1.2.0.apk`
 - **Size:** 47 MB (48.7 MB uncompressed)
@@ -16,6 +17,7 @@
 - **Build Output:** `build/app/outputs/flutter-apk/app-release.apk`
 
 ### Version Configuration
+
 - **Version Name:** 1.2.0
 - **Version Code:** 2 (from pubspec.yaml)
 - **Target SDK:** 35
@@ -27,22 +29,28 @@
 ## Issues Fixed
 
 ### 1. Gradle/Java Version Compatibility
+
 **Error:** `25.0.1` - Java 25 version not recognized by Gradle 8.14
 **Solution:** Used Java 17 (from system installation) instead of Java 25 from VS Code extension
+
 ```bash
 export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
 ```
 
 ### 2. Missing Namespace in flutter_bluetooth_serial Plugin
+
 **Error:** `Namespace not specified. Specify a namespace in the module's build file`
 **Solution:** Added namespace to plugin's build.gradle:
+
 ```gradle
 namespace 'io.github.edufolly.flutterbluetoothserial'
 ```
 
 ### 3. Android Resource Linking Error (lStar Attribute)
+
 **Error:** `AAPT: error: resource android:attr/lStar not found`
 **Solution:** Updated flutter_bluetooth_serial build.gradle to use compatible SDK versions:
+
 - Updated `compileSdkVersion` from 30 to 35
 - Updated `targetSdkVersion` to 35
 - Updated `buildToolsVersion` to 35.0.0
@@ -50,6 +58,7 @@ namespace 'io.github.edufolly.flutterbluetoothserial'
 ## Plugin Modifications
 
 ### flutter_bluetooth_serial-0.4.0
+
 **File:** `/home/kal/.pub-cache/hosted/pub.dev/flutter_bluetooth_serial-0.4.0/android/build.gradle`
 
 ```gradle

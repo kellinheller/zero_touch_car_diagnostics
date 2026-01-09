@@ -1,4 +1,7 @@
-/// Enum for supported OBD2 chip types
+// ignore: slash_for_doc_comments
+/**
+ * Enum for supported OBD2 chip types
+ */
 enum OBDChipType {
   elm327, // Original ELM327 (HS/HS mode)
   elm329, // ELM329 variant

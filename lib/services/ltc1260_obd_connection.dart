@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'obd_connection.dart';
 
-/// LTC1260 (Chinese OBD2 chip) implementation
-/// Similar to ELM327 but with some protocol differences
+/**
+ * LTC1260 (Chinese OBD2 chip) implementation
+ * Similar to ELM327 but with some protocol differences
+ */
 class LTC1260ObdConnection implements ObdConnection {
   final Stream<String> _inputStream;
   final Function(String) _sendOutput;
