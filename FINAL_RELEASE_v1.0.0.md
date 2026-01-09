@@ -190,6 +190,7 @@ Before publishing:
 - v2.0.0: Backend API integration
 
 **Planned**:
+
 - v1.1.0: Bluetooth support re-enabled
 - v2.0.0: Backend API integration
 

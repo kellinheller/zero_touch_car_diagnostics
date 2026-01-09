@@ -50,7 +50,7 @@ class OBD2Protocol {
   };
 
   /// Advanced PIDs for specific chips
-  const Map<OBDChipType, Map<String, String>> advancedPIDs = {
+  static const Map<OBDChipType, Map<String, String>> advancedPIDs = {
     OBDChipType.elm329: {
       '0121': 'Distance traveled with MIL on',
       '0122': 'Fuel rail pressure (diesel)',

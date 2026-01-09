@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 /// Status indicator widget showing connection and device information
@@ -39,11 +41,15 @@ class StatusIndicator extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        // ignore: duplicate_ignore
+        // ignore: deprecated_member_use
         color: statusColor.withOpacity(0.1),
         border: Border.all(color: statusColor, width: 2),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
+            // ignore: duplicate_ignore
+            // ignore: deprecated_member_use
             color: statusColor.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -56,6 +62,8 @@ class StatusIndicator extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
+              // ignore: duplicate_ignore
+              // ignore: deprecated_member_use
               color: statusColor.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
@@ -91,6 +99,8 @@ class StatusIndicator extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
+                    // ignore: duplicate_ignore
+                    // ignore: deprecated_member_use
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -116,6 +126,8 @@ class StatusIndicator extends StatelessWidget {
               boxShadow: isConnected
                   ? [
                       BoxShadow(
+                        // ignore: duplicate_ignore
+                        // ignore: deprecated_member_use
                         color: Colors.green.withOpacity(0.5),
                         blurRadius: 4,
                         spreadRadius: 1,

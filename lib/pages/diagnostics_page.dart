@@ -57,8 +57,10 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
       if (_transport.contains('STN1110')) {
         chipDetected = 'STN1110 (Advanced OBD2)';
       } else if (_transport.contains('LTC1260'))
+        // ignore: curly_braces_in_flow_control_structures
         chipDetected = 'LTC1260 (Generic OBD2)';
       else if (_transport.contains('ELM327'))
+        // ignore: curly_braces_in_flow_control_structures
         chipDetected = 'ELM327 (Standard OBD2)';
 
       setState(() => _status = 'Connected: $chipDetected');
@@ -98,6 +100,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
         ),
         backgroundColor: Colors.cyan,
         elevation: 8,
+        // ignore: deprecated_member_use
         shadowColor: Colors.cyan.withOpacity(0.5),
         actions: [
           IconButton(
@@ -206,6 +209,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Colors.cyan.withOpacity(0.15),
                   border: Border.all(color: Colors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(8),
@@ -242,6 +246,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.lime.withOpacity(0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 2),

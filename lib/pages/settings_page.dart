@@ -318,6 +318,7 @@ class _SettingsPageState extends State<SettingsPage> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.cyan, width: 1),
         boxShadow: [
+          // ignore: deprecated_member_use
           BoxShadow(color: Colors.cyan.withOpacity(0.1), blurRadius: 4),
         ],
       ),
@@ -417,6 +418,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: color.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: color, width: 1),
@@ -454,6 +456,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: color.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: color, width: 2),
@@ -464,6 +467,7 @@ class _SettingsPageState extends State<SettingsPage> {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: color.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
@@ -518,6 +522,8 @@ class _SettingsPageState extends State<SettingsPage> {
     required String link,
     required String url,
   }) {
+    // ignore: deprecated_member_use
+    var withOpacity = Colors.cyan.withOpacity(0.1);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -530,7 +536,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.cyan.withOpacity(0.1),
+              color: withOpacity,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: Colors.cyan),
@@ -566,4 +572,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  Color newMethod(Color withOpacity) => withOpacity;
 }
