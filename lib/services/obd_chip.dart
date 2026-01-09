@@ -38,10 +38,12 @@ class ChipDetector {
     if (lower.contains('elm327')) return OBDChipType.elm327;
     if (lower.contains('elm329')) return OBDChipType.elm329;
     if (lower.contains('stn1110')) return OBDChipType.stm1110;
-    if (lower.contains('ltc1260') || lower.contains('1260'))
+    if (lower.contains('ltc1260') || lower.contains('1260')) {
       return OBDChipType.ltc1260;
-    if (lower.contains('obd') || lower.contains('kw1281'))
+    }
+    if (lower.contains('obd') || lower.contains('kw1281')) {
       return OBDChipType.generic;
+    }
 
     return OBDChipType.unknown;
   }

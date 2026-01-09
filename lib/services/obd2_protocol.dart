@@ -4,11 +4,12 @@ import 'obd_chip.dart';
 
 /// Generic OBD2 protocol handler supporting multiple chips
 class OBD2Protocol {
-  final OBDChipType chipType;
+  late final OBDChipType chipType;
   final Duration responseTimeout;
 
+  OBD2Protocol({this.responseTimeout = const Duration(seconds: 5)});
+
   final _responseQueue = <String>[];
-  });
 
   /// Standard OBD2 PIDs (Parameter IDs) supported across all chips
   static const Map<String, String> standardPIDs = {
@@ -49,7 +50,7 @@ class OBD2Protocol {
   };
 
   /// Advanced PIDs for specific chips
-  static const Map<OBDChipType, Map<String, String>> advancedPIDs = {
+  const Map<OBDChipType, Map<String, String>> advancedPIDs = {
     OBDChipType.elm329: {
       '0121': 'Distance traveled with MIL on',
       '0122': 'Fuel rail pressure (diesel)',

@@ -54,9 +54,9 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
 
       // Log chip detection
       String chipDetected = 'Unknown';
-      if (_transport.contains('STN1110'))
+      if (_transport.contains('STN1110')) {
         chipDetected = 'STN1110 (Advanced OBD2)';
-      else if (_transport.contains('LTC1260'))
+      } else if (_transport.contains('LTC1260'))
         chipDetected = 'LTC1260 (Generic OBD2)';
       else if (_transport.contains('ELM327'))
         chipDetected = 'ELM327 (Standard OBD2)';

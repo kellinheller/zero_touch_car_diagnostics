@@ -16,6 +16,7 @@
 - ⏳ Android APK Building (Gradle)
 
 **Expected Output**:
+
 - `build/app/outputs/flutter-apk/app-release.apk` (~45-55 MB)
 
 **Estimated Time**: 5-15 minutes

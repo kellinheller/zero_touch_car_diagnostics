@@ -8,12 +8,12 @@ class StatusIndicator extends StatelessWidget {
   final Color statusColor;
 
   const StatusIndicator({
-    Key? key,
+    super.key,
     required this.status,
     required this.transport,
     required this.isConnected,
     required this.statusColor,
-  }) : super(key: key);
+  });
 
   String _getStatusIcon() {
     if (status.contains('Connecting')) return '⏳';
@@ -137,11 +137,11 @@ class MiniStatusBar extends StatelessWidget {
   final String chipType;
 
   const MiniStatusBar({
-    Key? key,
+    super.key,
     required this.status,
     required this.isConnected,
     required this.chipType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
