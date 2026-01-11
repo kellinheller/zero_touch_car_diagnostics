@@ -19,6 +19,15 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _geminiKeyController = TextEditingController();
     _openaiKeyController = TextEditingController();
+    _loadApiKeys();
+  }
+
+  Future<void> _loadApiKeys() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _geminiKeyController.text = prefs.getString('gemini_api_key') ?? '';
+      _openaiKeyController.text = prefs.getString('openai_api_key') ?? '';
+    });
   }
 
   @override
@@ -28,7 +37,12 @@ class _SettingsPageState extends State<SettingsPage> {
     super.dispose();
   }
 
-  void _saveApiKeys() {
+  void _saveApiKeys() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('gemini_api_key', _geminiKeyController.text);
+    await prefs.setString('openai_api_key', _openaiKeyController.text);
+
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('✅ API Keys saved successfully!'),
@@ -36,6 +50,19 @@ class _SettingsPageState extends State<SettingsPage> {
         duration: Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not launch $urlString'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -381,7 +408,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () => _launchUrl(docLink),
               child: Text(
                 'Get Key',
                 style: TextStyle(
@@ -524,51 +551,54 @@ class _SettingsPageState extends State<SettingsPage> {
   }) {
     // ignore: deprecated_member_use
     var withOpacity = Colors.cyan.withOpacity(0.1);
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.cyan, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: withOpacity,
-              shape: BoxShape.circle,
+    return InkWell(
+      onTap: () => _launchUrl(url),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.cyan, width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: withOpacity,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: Colors.cyan),
             ),
-            child: Icon(icon, color: Colors.cyan),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  description,
-                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-                ),
-              ],
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text(
-            link,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
+            Text(
+              link,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

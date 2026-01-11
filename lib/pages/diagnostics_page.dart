@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../services/bluetooth_obd_connection.dart';
 import '../services/diagnostics_service.dart';
@@ -26,11 +27,45 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
   ObdConnection? _conn;
   Elm327Protocol? _elm;
 
+  Future<bool> _requestBluetoothPermissions() async {
+    // Request Bluetooth permissions for Android 12+
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location,
+    ].request();
+
+    bool allGranted = statuses.values.every((status) => status.isGranted);
+
+    if (!allGranted) {
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            '❌ Bluetooth permissions are required to connect to OBD2 devices',
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> _connect() async {
     setState(() => _status = 'Connecting...');
     try {
       // Handle different transport and chip combinations
       if (_transport.startsWith('Bluetooth')) {
+        // Request Bluetooth permissions before connecting
+        bool hasPermissions = await _requestBluetoothPermissions();
+        if (!hasPermissions) {
+          setState(() => _status = 'Permission denied');
+          return;
+        }
+
         _conn = BluetoothObdConnection();
         setState(
           () => _status =

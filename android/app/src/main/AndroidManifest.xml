@@ -8,6 +8,8 @@
     <!-- Android 12+ runtime permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <!-- Internet for API calls and url_launcher -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="zero_touch_car_diagnostics"
         android:name="${applicationName}"
@@ -49,6 +51,15 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- For url_launcher -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
         </intent>
     </queries>
 </manifest>
