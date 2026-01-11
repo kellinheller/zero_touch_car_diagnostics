@@ -17,7 +17,7 @@ subprojects {
 
 android {
     namespace = "com.example.zero_touch_car_diagnostics"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
