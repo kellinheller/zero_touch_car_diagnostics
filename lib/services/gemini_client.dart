@@ -1,59 +1,118 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class GeminiClient {
-  GenerativeModel? _model;
+  late GenerativeModel _model;
+  final String? _apiKey;
+  final String _primaryModel;
+  
+  static const List<String> FALLBACK_MODELS = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-pro',
+  ];
 
-  GeminiClient({String? apiKey, String? modelName}) {
-    _initModel(apiKey, modelName);
+  GeminiClient({String? apiKey, String? modelName})
+      : _apiKey = apiKey ?? const String.fromEnvironment('GEMINI_API_KEY'),
+        _primaryModel = modelName ?? 'gemini-2.5-pro' {
+    _initializeModel();
   }
 
-  Future<void> _initModel(String? apiKey, String? modelName) async {
-    String? key = apiKey;
-    if (key == null || key.isEmpty) {
-      final prefs = await SharedPreferences.getInstance();
-      key = prefs.getString('gemini_api_key');
+  void _initializeModel() {
+    if (_apiKey == null || _apiKey!.isEmpty) {
+      throw ArgumentError('GEMINI_API_KEY is required');
     }
-
-    key ??= const String.fromEnvironment('GEMINI_API_KEY');
-
-    if (key.isEmpty) {
-      throw Exception('No Gemini API key found. Please configure in Settings.');
-    }
-
     _model = GenerativeModel(
-      model:
-          modelName ??
-          const String.fromEnvironment(
-            'GEMINI_MODEL',
-            defaultValue: 'gemini-1.5-pro',
-          ),
-      apiKey: key,
+      model: _primaryModel,
+      apiKey: _apiKey!,
     );
   }
 
+  /// Validate API key format
+  bool validateApiKey(String key) {
+    return key.isNotEmpty && key.length > 10;
+  }
+
+  /// Set model dynamically
+  void setModel(String modelName) {
+    _model = GenerativeModel(
+      model: modelName,
+      apiKey: _apiKey!,
+    );
+  }
+
+  /// Get list of available models
+  List<String> getAvailableModels() {
+    return [_primaryModel, ..._fallbackModels()];
+  }
+
+  List<String> _fallbackModels() {
+    return FALLBACK_MODELS.where((m) => m != _primaryModel).toList();
+  }
+
   Future<Map<String, dynamic>> diagnose(Map<String, dynamic> telemetry) async {
-    if (_model == null) {
-      await _initModel(null, null);
-    }
-
-    if (_model == null) {
-      throw Exception('Failed to initialize Gemini model');
-    }
-
     final prompt = _buildPrompt(telemetry);
     final content = [Content.text(prompt)];
-    final response = await _model!.generateContent(content);
-    final text = response.text ?? '';
+    
     try {
-      return json.decode(text) as Map<String, dynamic>;
-    } catch (_) {
-      // If not JSON, wrap in structure
-      return {'diagnosis': text, 'confidence': 0.0, 'evidence': telemetry};
+      final response = await _model.generateContent(content).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () => throw TimeoutException('Diagnosis timeout'),
+      );
+      
+      final text = response.text ?? '';
+      try {
+        return json.decode(text) as Map<String, dynamic>;
+      } catch (_) {
+        // If not JSON, wrap in structure
+        return {
+          'diagnosis': text,
+          'confidence': 0.5,
+          'probable_causes': ['Requires manual inspection'],
+          'recommended_actions': ['Review diagnosis above'],
+          'required_follow_up_tests': ['Visual inspection recommended'],
+          'evidence': telemetry,
+        };
+      }
+    } catch (e) {
+      // Fallback to simpler diagnosis
+      return _buildFallbackDiagnosis(telemetry, e.toString());
     }
+  }
+
+  /// Build fallback diagnosis when API fails
+  Map<String, dynamic> _buildFallbackDiagnosis(
+    Map<String, dynamic> telemetry,
+    String error,
+  ) {
+    final issues = <String>[];
+    
+    // Basic heuristic checks
+    final rpm = telemetry['010C'] as num? ?? 0;
+    final temp = telemetry['0105'] as num? ?? 0;
+    final load = telemetry['0104'] as num? ?? 0;
+    
+    if (temp > 110) issues.add('Engine overheating');
+    if (load > 80) issues.add('High engine load');
+    if (rpm > 6500) issues.add('High RPM operation');
+    
+    return {
+      'diagnosis': issues.isEmpty
+          ? 'Vehicle operating normally'
+          : 'Potential issues detected: ${issues.join(", ")}',
+      'confidence': 0.4,
+      'probable_causes': issues,
+      'recommended_actions': [
+        'Check temperature gauge',
+        'Monitor engine load',
+        'Consult full diagnostics'
+      ],
+      'required_follow_up_tests': ['Full OBD-II scan'],
+      'evidence': telemetry,
+      'fallback': true,
+      'error': error,
+    };
   }
 
   String _buildPrompt(Map<String, dynamic> telemetry) {
@@ -65,3 +124,4 @@ ${jsonEncode(telemetry)}
 ''';
   }
 }
+
