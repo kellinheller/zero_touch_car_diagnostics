@@ -39,17 +39,17 @@ dependencies:
   flutter_bluetooth_serial: ^0.4.0
   usb_serial: ^0.2.2
   google_generative_ai: ^0.4.6
-    # Maps and location
-    google_maps_flutter: ^2.5.0
-    geolocator: ^10.1.0
-    geocoding: ^2.1.1
-    # Sensors
-    sensors_plus: ^4.0.0
-    # Storage
-    shared_preferences: ^2.2.2
-    path_provider: ^2.1.1
-    # JSON
-    json_annotation: ^4.8.1
+  # Maps and location
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  # Sensors
+  sensors_plus: ^4.0.0
+  # Storage
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+  # JSON
+  json_annotation: ^4.8.1
   # Utils
   url_launcher: ^6.2.2
 
