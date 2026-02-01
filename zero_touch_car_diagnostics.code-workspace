@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"codellm.provider": "ollama",
+		"codellm.openai.temperature": 0.2,
+		"gitlens.ai.largePromptWarningThreshold": 50000
+	}
+}
