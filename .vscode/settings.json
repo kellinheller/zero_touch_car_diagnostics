@@ -1,4 +1,4 @@
 {
     "chat.promptFilesRecommendations": {},
-    "idf.pythonInstallPath": "/usr/bin/python3"
+    "cmake.sourceDirectory": "/home/mark/zero_touch_car_diagnostics/android/app"
 }

@@ -5,19 +5,9 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-subprojects {
-    afterEvaluate {
-        if (pluginManager.hasPlugin("com.android.library")) {
-            extensions.getByType<com.android.build.gradle.LibraryExtension>().apply {
-                namespace = namespace ?: "com.example.flutter.plugins"
-            }
-        }
-    }
-}
-
 android {
     namespace = "com.example.zero_touch_car_diagnostics"
-    compileSdk = 36
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -47,15 +37,6 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-
-    // Enable CMake for native C++ code (backend bridge)
-    // Temporarily disabled for release build
-    // externalNativeBuild {
-    //     cmake {
-    //         path = file("CMakeLists.txt")
-    //         version = "3.18.1"
-    //     }
-    // }
 }
 
 flutter {

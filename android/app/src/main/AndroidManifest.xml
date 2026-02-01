@@ -5,11 +5,18 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Android 12+ runtime permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <!-- Internet for API calls and url_launcher -->
-    <uses-permission android:name="android.permission.INTERNET" />
+        <!-- GPS and location permissions -->
+        <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+        <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+        <!-- Internet for Gemini API -->
+        <uses-permission android:name="android.permission.INTERNET" />
+        <!-- File storage for trip logs -->
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:label="zero_touch_car_diagnostics"
         android:name="${applicationName}"
@@ -36,6 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+            <!-- Google Maps API key -->
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="YOUR_GOOGLE_MAPS_API_KEY_HERE"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -51,15 +62,6 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
-        </intent>
-        <!-- For url_launcher -->
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="http" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="https" />
         </intent>
     </queries>
 </manifest>

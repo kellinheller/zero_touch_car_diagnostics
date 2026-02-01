@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../services/bluetooth_obd_connection.dart';
 import '../services/diagnostics_service.dart';
@@ -8,8 +7,6 @@ import '../services/gemini_client.dart';
 import '../services/obd_connection.dart';
 import '../services/simulation_obd_connection.dart';
 import '../services/usb_obd_connection.dart';
-import '../widgets/status_indicator.dart';
-import 'settings_page.dart';
 
 class DiagnosticsPage extends StatefulWidget {
   const DiagnosticsPage({super.key});
@@ -27,78 +24,19 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
   ObdConnection? _conn;
   Elm327Protocol? _elm;
 
-  Future<bool> _requestBluetoothPermissions() async {
-    // Request Bluetooth permissions for Android 12+
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.location,
-    ].request();
-
-    bool allGranted = statuses.values.every((status) => status.isGranted);
-
-    if (!allGranted) {
-      if (!mounted) return false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            '❌ Bluetooth permissions are required to connect to OBD2 devices',
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
-      return false;
-    }
-
-    return true;
-  }
-
   Future<void> _connect() async {
     setState(() => _status = 'Connecting...');
     try {
-      // Handle different transport and chip combinations
-      if (_transport.startsWith('Bluetooth')) {
-        // Request Bluetooth permissions before connecting
-        bool hasPermissions = await _requestBluetoothPermissions();
-        if (!hasPermissions) {
-          setState(() => _status = 'Permission denied');
-          return;
-        }
-
+      if (_transport == 'Bluetooth') {
         _conn = BluetoothObdConnection();
-        setState(
-          () => _status =
-              'Detected: ${_transport.split('(')[1].replaceFirst(')', '')}',
-        );
-      } else if (_transport.startsWith('USB')) {
-        if (_transport.contains('Generic')) {
-          _conn = UsbObdConnection();
-          setState(() => _status = 'Using Generic OBD2 Protocol');
-        } else {
-          _conn = UsbObdConnection();
-          setState(() => _status = 'Using ELM327 Protocol');
-        }
+      } else if (_transport == 'USB') {
+        _conn = UsbObdConnection();
       } else {
         _conn = SimulationObdConnection();
-        setState(() => _status = 'Simulation Mode');
       }
-
       _elm = Elm327Protocol(_conn!);
       await _elm!.initialize();
-
-      // Log chip detection
-      String chipDetected = 'Unknown';
-      if (_transport.contains('STN1110')) {
-        chipDetected = 'STN1110 (Advanced OBD2)';
-      } else if (_transport.contains('LTC1260'))
-        // ignore: curly_braces_in_flow_control_structures
-        chipDetected = 'LTC1260 (Generic OBD2)';
-      else if (_transport.contains('ELM327'))
-        // ignore: curly_braces_in_flow_control_structures
-        chipDetected = 'ELM327 (Standard OBD2)';
-
-      setState(() => _status = 'Connected: $chipDetected');
+      setState(() => _status = 'Connected');
     } catch (e) {
       setState(() => _status = 'Error: $e');
     }
@@ -114,9 +52,7 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
     final result = await gemini.diagnose(telemetry);
     setState(() {
       _diagnosis = (result['diagnosis'] ?? '').toString();
-      _confidence = (result['confidence'] ?? 0.0) is num
-          ? (result['confidence'] as num).toDouble()
-          : 0.0;
+      _confidence = (result['confidence'] ?? 0.0) is num ? (result['confidence'] as num).toDouble() : 0.0;
       _status = 'Done';
     });
   }
@@ -124,183 +60,39 @@ class _DiagnosticsPageState extends State<DiagnosticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Zero-Touch Car Diagnostics',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.cyan,
-        elevation: 8,
-        // ignore: deprecated_member_use
-        shadowColor: Colors.cyan.withOpacity(0.5),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
-            tooltip: 'Settings & Requirements',
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const SettingsPage()));
-            },
-          ),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.cyan.shade50,
-              Colors.blue.shade50,
-              Colors.teal.shade50,
-            ],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Status Indicator
-              StatusIndicator(
-                status: _status,
-                transport: _transport,
-                isConnected: _elm != null,
-                statusColor: getStatusColor(_status),
+      appBar: AppBar(title: const Text('Zero-Touch Car Diagnostics')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              const Text('Transport:'),
+              const SizedBox(width: 12),
+              DropdownButton<String>(
+                value: _transport,
+                items: const [
+                  DropdownMenuItem(value: 'Simulation', child: Text('Simulation (Dev)')),
+                  DropdownMenuItem(value: 'Bluetooth', child: Text('Bluetooth')),
+                  DropdownMenuItem(value: 'USB', child: Text('USB')),
+                ],
+                onChanged: (v) => setState(() => _transport = v ?? 'Simulation'),
               ),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const Text('Transport:'),
-                    const SizedBox(width: 12),
-                    DropdownButton<String>(
-                      value: _transport,
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Simulation',
-                          child: Text('Simulation (Dev)'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Bluetooth (ELM327)',
-                          child: Text('Bluetooth (ELM327)'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Bluetooth (STN1110)',
-                          child: Text('Bluetooth (STN1110)'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Bluetooth (LTC1260)',
-                          child: Text('Bluetooth (LTC1260)'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'USB (ELM327)',
-                          child: Text('USB (ELM327)'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'USB (Generic)',
-                          child: Text('USB (Generic OBD2)'),
-                        ),
-                      ],
-                      onChanged: (v) =>
-                          setState(() => _transport = v ?? 'Simulation'),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _connect,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text('Connect'),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _diagnose,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text('Diagnose'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  // ignore: deprecated_member_use
-                  color: Colors.cyan.withOpacity(0.15),
-                  border: Border.all(color: Colors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Status: $_status',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.lime.shade50,
-                  border: Border.all(color: Colors.lime, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      // ignore: deprecated_member_use
-                      color: Colors.lime.withOpacity(0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  _diagnosis.isNotEmpty
-                      ? _diagnosis
-                      : 'No diagnosis yet. Click "Diagnose" to start!',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.lime.shade900,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-            ],
-          ),
+              const SizedBox(width: 12),
+              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
+              const SizedBox(width: 12),
+              ElevatedButton(onPressed: _diagnose, child: const Text('Diagnose')),
+            ]),
+            const SizedBox(height: 12),
+            Text('Status: $_status'),
+            const SizedBox(height: 12),
+            Text('Diagnosis (confidence ${_confidence.toStringAsFixed(2)}):'),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
+              child: Text(_diagnosis.isNotEmpty ? _diagnosis : 'No diagnosis yet.'),
+            ),
+          ],
         ),
       ),
     );

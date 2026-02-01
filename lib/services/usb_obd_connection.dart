@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:usb_serial/usb_serial.dart';
-
 import 'obd_connection.dart';
 
 class UsbObdConnection implements ObdConnection {
