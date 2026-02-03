@@ -26,19 +26,32 @@ This is a **comprehensive multi-platform Flutter app** for zero-touch automotive
 
 **Layered abstraction** with comprehensive PID support:
 - [lib/services/obd_connection.dart](lib/services/obd_connection.dart) - Abstract interface (`connect()`, `write()`, `lines` stream)
+- [lib/services/obd2_protocol.dart](lib/services/obd2_protocol.dart) - Generic OBD2 protocol handler supporting multiple chips with 80+ standard PIDs
 - [lib/services/elm327_protocol.dart](lib/services/elm327_protocol.dart) - ELM327 init (`ATZ`, `ATE0`) and PID queries
 - [lib/services/obd_pid_registry.dart](lib/services/obd_pid_registry.dart) - **Complete registry of 50+ generic OBD-II PIDs** with parsers
 - [lib/services/diagnostics_service.dart](lib/services/diagnostics_service.dart) - High-level sampling
 
-**Three transport implementations:**
+**Five transport implementations:**
 - [bluetooth_obd_connection.dart](lib/services/bluetooth_obd_connection.dart) - Bluetooth Classic RFCOMM with keep-alive
-- [usb_obd_connection.dart](lib/services/usb_obd_connection.dart) - USB serial
+- [usb_obd_connection.dart](lib/services/usb_obd_connection.dart) - USB serial via `usb_serial`
+- [ltc1260_obd_connection.dart](lib/services/ltc1260_obd_connection.dart) - Chinese LTC1260 adapter with protocol variant handling
+- [stn1110_obd_connection.dart](lib/services/stn1110_obd_connection.dart) - STN1110 adapter (J1939 + ISO14229 capable)
 - [simulation_obd_connection.dart](lib/services/simulation_obd_connection.dart) - Mock data for development
 
 **Bluetooth Keep-Alive:** Prevents timeouts with:
 - 10-second timer sending `0100` PID support query
 - 30-second activity staleness detection
 - Automatic reconnection handling
+
+### Chip Type Detection
+
+[lib/services/obd_chip.dart](lib/services/obd_chip.dart) provides automatic chip detection:
+- `OBDChipType` enum: `elm327`, `elm329`, `stm1110`, `ltc1260`, `generic`, `unknown`
+- `ChipDetector.detectChipType(String)` identifies chips from AT responses
+- `OBDChipInfo` stores capabilities (J1939, ISO14229 support)
+- **Pattern:** Query `AT@1` to detect chip, select appropriate protocol handler
+- **LTC1260 notes:** Chinese clones may have non-standard response formatting; use flexible parser
+- **STN1110:** More advanced protocols (J1939, ISO14229) available via specific AT commands
 
 ### Trip Logging & Sensor Fusion
 
@@ -113,6 +126,23 @@ flutter run --dart-define=GEMINI_API_KEY=your_key
 # <meta-data android:name="com.google.android.geo.API_KEY" android:value="YOUR_KEY"/>
 ```
 
+### Building Release APK/AAB
+
+**Critical Java version requirement:** Use Java 17 LTS or 21 LTS (Java 25+ causes Kotlin compiler issues)
+
+```bash
+# Clean build
+flutter clean && rm -rf android/app/build
+
+# Android APK (signed)
+flutter build apk --release
+
+# Android App Bundle (Google Play Store)
+flutter build aab --release
+```
+
+Output: `build/app/outputs/flutter-apk/app-release.apk` and `build/app/outputs/bundle/release/app-release.aab`
+
 ### Permissions (Android)
 
 [android/app/src/main/AndroidManifest.xml](android/app/src/main/AndroidManifest.xml):
@@ -167,13 +197,23 @@ ELM327 returns hex like `41 0C AA BB` for PID `010C`:
 
 ### Transport Selection Pattern
 
-[MainDashboardPage](lib/pages/main_dashboard_page.dart) dropdown:
+[MainDashboardPage](lib/pages/main_dashboard_page.dart) dropdown (line ~391):
 ```dart
-if (_transport == 'Bluetooth') _conn = BluetoothObdConnection();
-else if (_transport == 'USB') _conn = UsbObdConnection();
-else _conn = SimulationObdConnection();
+if (_transport == 'Bluetooth') {
+  _conn = BluetoothObdConnection();
+} else if (_transport == 'USB') {
+  _conn = UsbObdConnection();
+} else if (_transport == 'STN1110') {
+  _conn = STN1110ObdConnection(...);
+} else if (_transport == 'LTC1260') {
+  _conn = LTC1260ObdConnection(...);
+} else {
+  _conn = SimulationObdConnection();
+}
+_elm = Elm327Protocol(_conn!);
+diagnostics = DiagnosticsService(_elm!);
 ```
-**Rule:** Always wrap transport in `Elm327Protocol` before `DiagnosticsService`.
+**Critical rule:** Always instantiate transport, then wrap in `Elm327Protocol`, then pass to `DiagnosticsService`. Never skip this layering.
 
 ### Native Method Channel Pattern
 

@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.zero_touch_car_diagnostics"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Removed NDK requirement - no native code needed for OBD-II diagnostics
+    // ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
