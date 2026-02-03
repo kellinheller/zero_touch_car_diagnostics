@@ -2,6 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "test"
+		},
+		{
+			"path": "../zero_touch_car_diagnostics_vs2"
 		}
 	],
 	"settings": {
