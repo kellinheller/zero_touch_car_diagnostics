@@ -12,12 +12,13 @@ v1.32.0 brings comprehensive UI enhancements with car graphics visualization and
 ### 1. Car Graphics UI
 
 #### Gauge Widget (`gauge_widget.dart`)
+
 - **Animated Circular Gauges** for real-time metric visualization
   - CustomPaint rendering with smooth arc animations
   - Color-coded zones: Green (normal) → Orange (warning) → Red (critical)
   - Center value display with unit labels
   - Responsive 150×150px design
-  
+
 - **Dashboard Gauge Cluster**
   - RPM Gauge (0–8,000 rpm)
   - Speed Gauge (0–200 km/h)
@@ -25,6 +26,7 @@ v1.32.0 brings comprehensive UI enhancements with car graphics visualization and
   - Smooth transitions between updates (800ms easing)
 
 #### Car Status Widget Integration
+
 - Real-time vehicle health visualization
 - 6-metric grid display (RPM, Speed, Coolant, Load, Fuel, Throttle)
 - Connection status indicator
@@ -33,24 +35,30 @@ v1.32.0 brings comprehensive UI enhancements with car graphics visualization and
 ### 2. Enhanced Gemini AI Integration
 
 #### Advanced Model Management
+
 - **Default Model:** Gemini 2.5 Pro (free tier)
 - **Fallback System:** Automatic model switching on API failures
-  ```
-  Primary: gemini-2.5-pro
-  Fallback 1: gemini-2.5-flash
-  Fallback 2: gemini-2.0-flash
-  Fallback 3: gemini-1.5-pro
-  ```
+
+```dart
+Primary: gemini-2.5-pro
+Fallback 1: gemini-2.5-flash
+Fallback 2: gemini-2.0-flash
+Fallback 3: gemini-1.5-pro
+```
+
 - **Dynamic Model Selection:** Change models without restarting
 
 #### Reliability Features
+
 - **Timeout Handling:** 30-second API timeout with graceful fallback
 - **Error Recovery:** Heuristic-based diagnostics when API unavailable
 - **API Key Validation:** Format checking before initialization
 - **Response Caching:** Optimized for free tier limits (1,500 requests/day)
 
 #### Fallback Diagnostics
+
 When API is unavailable, the system performs basic heuristic analysis:
+
 - Engine temperature monitoring (threshold: 110°C)
 - Engine load assessment (threshold: 80%)
 - RPM monitoring (threshold: 6,500 rpm)
@@ -59,6 +67,7 @@ When API is unavailable, the system performs basic heuristic analysis:
 ### 3. Dashboard UI Reorganization
 
 **Improved Layout Order:**
+
 1. **Car Status Widget** - Vehicle health overview
 2. **Gauge Cluster** - Primary metrics visualization
 3. **Map Preview** - Real-time GPS tracking
@@ -66,6 +75,7 @@ When API is unavailable, the system performs basic heuristic analysis:
 5. **OBD-II Data** - Detailed sensor readings
 
 Benefits:
+
 - Critical metrics visible immediately
 - Intuitive information hierarchy
 - Enhanced visual feedback
@@ -73,16 +83,19 @@ Benefits:
 ## Technical Improvements
 
 ### Code Quality
+
 - **Pure Flutter Implementation:** No external UI packages needed
 - **Material Design 3:** Updated color scheme and animations
 - **Type Safety:** Full type annotations in all new widgets
 
 ### Performance
+
 - **Smooth Animations:** 800ms easing for gauge transitions
 - **Efficient Rendering:** CustomPaint implementation for gauges
 - **Lightweight Components:** Minimal dependency footprint
 
 ### API Management
+
 - Configurable via Settings page
 - Help links to Google AI Studio
 - Free tier guidance with 1,500 request/day limits
@@ -94,21 +107,25 @@ None. This release is fully backward compatible.
 ## Dependencies
 
 ### New
+
 None - all features use existing dependencies.
 
 ### Updated
+
 - All Flutter plugins regenerated for compatibility
 - `google_generative_ai: ^0.4.6` (enhanced support)
 
 ## Installation & Setup
 
 ### For Users
+
 1. Install APK: `ZTCD_v1.32.0.apk`
 2. Configure Gemini API Key (Settings → Gemini Configuration)
 3. Select primary OBD-II transport (Simulation/Bluetooth/USB)
 4. Start monitoring
 
 ### For Developers
+
 ```bash
 git clone https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2.git
 cd zero_touch_car_diagnostics
@@ -120,14 +137,17 @@ flutter run
 ## Configuration
 
 ### Gemini AI
-**Settings Page → Gemini AI Configuration**
+
+#### Settings Page → Gemini AI Configuration
+
 - **Toggle:** Enable/disable AI diagnostics
 - **API Key:** Free from Google AI Studio (ai.google.dev)
 - **Model:** Select from available options
 - **Free Tier:** 1,500 requests/day with all models
 
 **First Run Setup:**
-1. Go to https://aistudio.google.com/app/apikey
+
+1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 2. Create API key (no credit card needed)
 3. Paste into Settings
 4. Select model (default: Gemini 2.5 Pro)
@@ -159,7 +179,7 @@ flutter run
 ## Performance Metrics
 
 | Metric | Value |
-|--------|-------|
+| --------- | --------- |
 | APK Size | ~47 MB |
 | Gauge Render Time | <50ms |
 | Dashboard Load Time | <200ms |
@@ -169,6 +189,7 @@ flutter run
 ## Upgrade Path
 
 From v1.31.0:
+
 1. Backup trip data (optional)
 2. Uninstall v1.31.0
 3. Install v1.32.0 APK
@@ -183,7 +204,7 @@ From v1.31.0:
 
 ## Support & Issues
 
-- **GitHub Issues:** https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/issues
+- **GitHub Issues:** [https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/issues](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2/issues)
 - **Documentation:** See [CAR_GRAPHICS_IMPLEMENTATION.md](CAR_GRAPHICS_IMPLEMENTATION.md)
 - **Integration Guide:** See [OBD_INTEGRATION.md](OBD_INTEGRATION.md)
 
@@ -200,11 +221,11 @@ From v1.31.0:
 
 ## Contributors
 
-- Mark Developer (mark@ztcd.local)
+- Mark Developer
 - Automated via GitHub Copilot
 
 ---
 
-**Repository:** https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2
+**Repository:** [https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2](https://github.com/donniebrasc/zero_touch_car_diagnostics_vs2)
 **Tag:** v1.32.0
 **Build:** 132
