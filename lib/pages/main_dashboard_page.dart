@@ -316,7 +316,6 @@ class _MainDashboardPageState extends State<MainDashboardPage> with SingleTicker
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-<<<<<<< HEAD
           // Car Status Widget
           CarStatusWidget(obdData: _obdData, isConnected: _status == 'Connected', isRecording: _isRecording),
           const SizedBox(height: 16),
