@@ -1,0 +1,42 @@
+name: Debug CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show environment
+        run: |
+          echo "--- ENV ---"
+          env
+          echo "--- Java ---"
+          java -version || true
+          echo "--- Flutter ---"
+          flutter --version || true
+
+      - name: List repo files
+        run: |
+          ls -la
+          echo "--- top lib files ---"
+          ls -la lib | head -30 || true
+
+      - name: Archive debug files
+        run: |
+          mkdir -p debug_art
+          flutter --version > debug_art/flutter_version.txt || true
+          uname -a > debug_art/uname.txt || true
+          tar -czf debug_art.tar.gz debug_art || true
+
+      - name: Upload debug artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-artifacts
+          path: debug_art.tar.gz
+          retention-days: 7
