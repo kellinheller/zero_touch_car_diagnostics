@@ -28,27 +28,63 @@ jobs:
           
       - name: Get dependencies
         run: flutter pub get
-        
-      - name: Build APK
+
+      - name: Show environment
         run: |
-          flutter build apk --release \
-            --build-name=1.32.11 \
-            --build-number=33
-            
-      - name: Prepare release APK
+          echo "--- Environment ---"
+          env
+          echo "--- Java ---"
+          java -version || true
+          echo "--- Flutter ---"
+          flutter --version || true
+          echo "--- sdkmanager (if available) ---"
+          which sdkmanager || true
+
+      - name: Install Android SDK packages (if sdkmanager present)
+        shell: bash
+        run: |
+          set -e
+          if command -v sdkmanager >/dev/null 2>&1; then
+            echo "Installing Android SDK packages"
+            yes | sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" "cmdline-tools;latest" || true
+            yes | sdkmanager --licenses || true
+          else
+            echo "sdkmanager not found; assuming runner already has Android SDK"
+          fi
+
+      - name: Flutter doctor
+        run: flutter doctor -v || true
+
+      - name: Build APK (verbose)
+        run: |
+          set -o pipefail
+          mkdir -p build_logs
+          flutter build apk --release --build-name=1.32.11 --build-number=33 --verbose 2>&1 | tee build_logs/flutter_build.log
+
+      - name: Prepare release APK and logs
         run: |
           mkdir -p release
-          cp build/app/outputs/flutter-apk/app-release.apk release/ZTCDv1.32.11.apk
-          ls -lh release/
-          
-      - name: Create GitHub Release
+          if [ -f build/app/outputs/flutter-apk/app-release.apk ]; then
+            cp build/app/outputs/flutter-apk/app-release.apk release/ZTCDv1.32.11.apk
+          fi
+          ls -lh release || true
+          ls -lh build_logs || true
+
+      - name: Upload build logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-logs-v1.32.11
+          path: build_logs
+          retention-days: 30
+
+      - name: Create GitHub Release (if tag)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
           files: release/ZTCDv1.32.11.apk
           body: |
             # ZTCD v1.32.11 Release
-            
+
             ## Features
             - Dual LLM Support (Gemini 2.5 Pro + ChatGPT/OpenAI)
             - OBD-II Telemetry (50+ PIDs)
@@ -56,24 +92,24 @@ jobs:
             - Real-time Damage Scoring
             - Trip Logging with Route Analysis
             - AI-Powered Diagnostics
-            
+
             ## Installation
             1. Download `ZTCDv1.32.11.apk`
             2. Enable "Unknown sources" in Android settings
             3. Install the APK
             4. Configure your AI API keys in Settings (Gemini or OpenAI)
-            
+
             ## What's New
             - Added OpenAI ChatGPT support as alternative to Gemini
             - Settings UI with provider selection
             - Configurable model selection (GPT-4o, GPT-4, GPT-3.5-turbo)
             - Support for both Gemini and OpenAI simultaneously
-            
+
             **Commit**: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload artifact
+
+      - name: Upload artifact (APK if present)
         uses: actions/upload-artifact@v3
         with:
           name: ZTCDv1.32.11-apk
