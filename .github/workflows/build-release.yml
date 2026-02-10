@@ -56,12 +56,14 @@ jobs:
         run: flutter doctor -v || true
 
       - name: Build APK (verbose)
+        continue-on-error: true
         run: |
           set -o pipefail
           mkdir -p build_logs
           flutter build apk --release --build-name=1.32.11 --build-number=33 --verbose 2>&1 | tee build_logs/flutter_build.log
 
       - name: Prepare release APK and logs
+        if: always()
         run: |
           mkdir -p release
           if [ -f build/app/outputs/flutter-apk/app-release.apk ]; then
@@ -71,6 +73,7 @@ jobs:
           ls -lh build_logs || true
 
       - name: Upload build logs
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: build-logs-v1.32.11
