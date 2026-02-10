@@ -69,7 +69,6 @@ jobs:
             - Configurable model selection (GPT-4o, GPT-4, GPT-3.5-turbo)
             - Support for both Gemini and OpenAI simultaneously
             
-            **Build Date**: ${{ github.event.head_commit.timestamp || now() }}
             **Commit**: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
